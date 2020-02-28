@@ -1,0 +1,121 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Renk_Kodu_Bulma
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        List<ulong> rRenk = new List<ulong>();
+        List<ulong> gRenk = new List<ulong>();
+        List<ulong> bRenk = new List<ulong>();
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileName = "";
+            openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            openFileDialog1.Title = "Bir Resim Seçiniz..";
+            openFileDialog1.Filter = "Jpg Resim |*.jpg| Png Resim |*.png";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                pictureBox1.ImageLocation = openFileDialog1.FileName;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileName = "";
+            openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            openFileDialog1.Title = "Bir Resim Seçiniz..";
+            openFileDialog1.Filter = "Jpg Resim |*.jpg| Png Resim |*.png";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox1.ImageLocation = openFileDialog1.FileName;
+                button2.BackColor = Color.Red;
+                ResimSecVeRenkKodlariniBul();
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        void RenkKodlariniResimeDonustur()
+        {
+            Random rnd = new Random();
+            string[] dizi = File.ReadAllLines(openFileDialog1.FileName);
+            string[] resimBoyutu = dizi[0].Split(':');
+            Bitmap bmp = new Bitmap(Convert.ToInt32(resimBoyutu[0]), Convert.ToInt32(resimBoyutu[1]));
+            int a = 0;
+            for (int i = 0; i < Convert.ToInt32(resimBoyutu[0]) * Convert.ToInt32(resimBoyutu[1]); i++)
+            {
+                rRenk.Add(Convert.ToUInt32(dizi[1].Substring(a, 3)));
+                gRenk.Add(Convert.ToUInt32(dizi[1].Substring(a + 3, 3)));
+                bRenk.Add(Convert.ToUInt32(dizi[1].Substring(a + 6, 3)));
+                a+=9;
+            }
+            int degisken = 0;
+            for (int j = 0; j < Convert.ToInt32(resimBoyutu[0]); j++)
+            {
+                for (int k = 0; k < Convert.ToInt32(resimBoyutu[1]); k++)
+                {
+                    bmp.SetPixel(j, k, Color.FromArgb(255, Convert.ToInt32(rRenk[degisken]), Convert.ToInt32(gRenk[degisken]), Convert.ToInt32(bRenk[degisken])));
+                    degisken++;
+                }
+            }
+            pictureBox1.Image = bmp;
+            bmp.Save(rnd.Next(10000000, 99999999) + ".jpg");
+            button3.BackColor = SystemColors.Control;
+        }
+
+        void ResimSecVeRenkKodlariniBul()
+        {
+            try
+            {
+                Random rnd = new Random();
+                Bitmap resim = new Bitmap(openFileDialog1.FileName);
+                Color renk;
+                StreamWriter yaz = new StreamWriter(rnd.Next(10000000, 99999999) + ".txt");
+                yaz.WriteLine(resim.Width + ":" + resim.Height);
+                for (int i = 0; i < resim.Width; i++)
+                {
+                    for (int j = 0; j < resim.Height; j++)
+                    {
+                        renk = resim.GetPixel(i, j);
+                        yaz.Write(renk.R.ToString().PadLeft(3, '0') + renk.G.ToString().PadLeft(3, '0') + renk.B.ToString().PadLeft(3, '0'));
+                    }
+                }
+                yaz.Close();
+                button2.BackColor = SystemColors.Control;
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileName = "";
+            openFileDialog1.InitialDirectory = Application.StartupPath;
+            openFileDialog1.Title = "Not Defteri Dosyası Seçiniz..";
+            openFileDialog1.Filter = "Not Defteri |*.txt";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                button3.BackColor = Color.Red;
+                RenkKodlariniResimeDonustur();
+            }
+        }
+    }
+}
