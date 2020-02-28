@@ -1,0 +1,4414 @@
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace Bildiri
+{
+    public static class popUp
+    {
+        static Form frm;
+        static BackgroundWorker backWork1;
+        static bool bildirimAcik = false;
+        static Label lblBaslik;
+        static Panel panel1;
+        static Panel panel2;
+        static Label lblAciklama;
+        static Label lblBos;
+        static PictureBox IconResim;
+
+        /// <summary>
+        /// <para>Description: Açıklama</para>
+        /// <para>Title: Başlık</para>
+        /// <para>Time: Süre (Saniye Cinsinden)</para>
+        /// <para>Position: Konum (Sol Üst: 1 - Sağ Üst: 2 - Sol Alt: 3 - Sağ Alt: 4)</para>
+        /// <para>Icon: İki Tür;</para>
+        /// <para> int(Error: 1 - (Default)Information: 2 - Question: 3 - Shield: 4 - Warning: 5 - Winlogo: 6)</para>
+        /// <para> string(Seçtiğiniz Resim - Default: Information)</para>
+        /// <para>Null = 0</para>
+        /// </summary>
+        public static void bahaBox(string Description)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int position)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string title)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = title;
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int time, sbyte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+                
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int time, int position)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+                
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int time, int position, string Icon)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                if (Icon != "")
+                {
+                    string sub = Icon.Substring(Icon.Length - 3, 3);
+                    if (sub == "png" || sub == "jpg" || sub == "ico" || sub == "peg")
+                        IconResim.Image = new Bitmap(Icon);
+                }
+                else
+                    IconResim.Image = SystemIcons.Information.ToBitmap();
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int time, int position, int Icon)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                switch (Icon)
+                {
+                    case 1: IconResim.Image = SystemIcons.Error.ToBitmap(); break;
+                    case 2: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                    case 3: IconResim.Image = SystemIcons.Question.ToBitmap(); break;
+                    case 4: IconResim.Image = SystemIcons.Shield.ToBitmap(); break;
+                    case 5: IconResim.Image = SystemIcons.Warning.ToBitmap(); break;
+                    case 6: IconResim.Image = SystemIcons.WinLogo.ToBitmap(); break;
+                    default: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                }
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string title, int time, sbyte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = title;
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string title, int Icon)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                switch (Icon)
+                {
+                    case 1: IconResim.Image = SystemIcons.Error.ToBitmap(); break;
+                    case 2: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                    case 3: IconResim.Image = SystemIcons.Question.ToBitmap(); break;
+                    case 4: IconResim.Image = SystemIcons.Shield.ToBitmap(); break;
+                    case 5: IconResim.Image = SystemIcons.Warning.ToBitmap(); break;
+                    case 6: IconResim.Image = SystemIcons.WinLogo.ToBitmap(); break;
+                    default: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                }
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = title;
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string title, string Icon)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                if (Icon != "")
+                {
+                    string sub = Icon.Substring(Icon.Length - 3, 3);
+
+                    if (sub == "png" || sub == "jpg" || sub == "ico" || sub == "peg")
+                        IconResim.Image = new Bitmap(Icon);
+                }
+                else
+                    IconResim.Image = SystemIcons.Information.ToBitmap();
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = title;
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string title, int time, string Icon)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                if (Icon != "")
+                {
+                    string sub = Icon.Substring(Icon.Length - 3, 3);
+
+                    if (sub == "png" || sub == "jpg" || sub == "ico" || sub == "peg")
+                        IconResim.Image = new Bitmap(Icon);
+                }
+                else
+                    IconResim.Image = SystemIcons.Information.ToBitmap();
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = title;
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string title, int time, int Icon, byte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                switch (Icon)
+                {
+                    case 1: IconResim.Image = SystemIcons.Error.ToBitmap(); break;
+                    case 2: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                    case 3: IconResim.Image = SystemIcons.Question.ToBitmap(); break;
+                    case 4: IconResim.Image = SystemIcons.Shield.ToBitmap(); break;
+                    case 5: IconResim.Image = SystemIcons.Warning.ToBitmap(); break;
+                    case 6: IconResim.Image = SystemIcons.WinLogo.ToBitmap(); break;
+                    default: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                }
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = title;
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string title, int time, int position)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = title;
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string Icon, byte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                if (Icon != "")
+                {
+                    string sub = Icon.Substring(Icon.Length - 3, 3);
+                    if (sub == "png" || sub == "jpg" || sub == "ico" || sub == "peg")
+                        IconResim.Image = new Bitmap(Icon);
+                }
+                else
+                    IconResim.Image = SystemIcons.Information.ToBitmap();
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+                
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int Icon, byte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                switch (Icon)
+                {
+                    case 1: IconResim.Image = SystemIcons.Error.ToBitmap(); break;
+                    case 2: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                    case 3: IconResim.Image = SystemIcons.Question.ToBitmap(); break;
+                    case 4: IconResim.Image = SystemIcons.Shield.ToBitmap(); break;
+                    case 5: IconResim.Image = SystemIcons.Warning.ToBitmap(); break;
+                    case 6: IconResim.Image = SystemIcons.WinLogo.ToBitmap(); break;
+                    default: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                }
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int position, string Icon)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                if (Icon != "")
+                {
+                    string sub = Icon.Substring(Icon.Length - 3, 3);
+                    if (sub == "png" || sub == "jpg" || sub == "ico" || sub == "peg")
+                        IconResim.Image = new Bitmap(Icon);
+                }
+                else
+                    IconResim.Image = SystemIcons.Information.ToBitmap();
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int position, int Icon, byte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                switch (Icon)
+                {
+                    case 1: IconResim.Image = SystemIcons.Error.ToBitmap(); break;
+                    case 2: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                    case 3: IconResim.Image = SystemIcons.Question.ToBitmap(); break;
+                    case 4: IconResim.Image = SystemIcons.Shield.ToBitmap(); break;
+                    case 5: IconResim.Image = SystemIcons.Warning.ToBitmap(); break;
+                    case 6: IconResim.Image = SystemIcons.WinLogo.ToBitmap(); break;
+                    default: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                }
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(3000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string Icon, int time, byte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                if (Icon != "")
+                {
+                    string sub = Icon.Substring(Icon.Length - 3, 3);
+                    if (sub == "png" || sub == "jpg" || sub == "ico" || sub == "peg")
+                        IconResim.Image = new Bitmap(Icon);
+                }
+                else
+                    IconResim.Image = SystemIcons.Information.ToBitmap();
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int Icon, int time, sbyte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                switch (Icon)
+                {
+                    case 1: IconResim.Image = SystemIcons.Error.ToBitmap(); break;
+                    case 2: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                    case 3: IconResim.Image = SystemIcons.Question.ToBitmap(); break;
+                    case 4: IconResim.Image = SystemIcons.Shield.ToBitmap(); break;
+                    case 5: IconResim.Image = SystemIcons.Warning.ToBitmap(); break;
+                    case 6: IconResim.Image = SystemIcons.WinLogo.ToBitmap(); break;
+                    default: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                }
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                sagAlt1();
+                sagAlt2();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int time, string Icon, int position)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                if (Icon != "")
+                {
+                    string sub = Icon.Substring(Icon.Length - 3, 3);
+                    if (sub == "png" || sub == "jpg" || sub == "ico" || sub == "peg")
+                        IconResim.Image = new Bitmap(Icon);
+                }
+                else
+                    IconResim.Image = SystemIcons.Information.ToBitmap();
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, int time, int Icon, int position, sbyte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                switch (Icon)
+                {
+                    case 1: IconResim.Image = SystemIcons.Error.ToBitmap(); break;
+                    case 2: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                    case 3: IconResim.Image = SystemIcons.Question.ToBitmap(); break;
+                    case 4: IconResim.Image = SystemIcons.Shield.ToBitmap(); break;
+                    case 5: IconResim.Image = SystemIcons.Warning.ToBitmap(); break;
+                    case 6: IconResim.Image = SystemIcons.WinLogo.ToBitmap(); break;
+                    default: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                }
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = "";
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+
+        public static void bahaBox(string Description, string title, int time, int position, string Icon)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                if (Icon != "")
+                {
+                    string sub = Icon.Substring(Icon.Length - 3, 3);
+                    if (sub == "png" || sub == "jpg" || sub == "ico" || sub == "peg")
+                        IconResim.Image = new Bitmap(Icon);
+                }
+                else
+                    IconResim.Image = SystemIcons.Information.ToBitmap();
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = title;
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+        
+        public static void bahaBox(string Description, string title, int time, int position, int Icon, byte null1)
+        {
+            if (bildirimAcik == false)
+            {
+                Form.CheckForIllegalCrossThreadCalls = false;
+
+                bildirimAcik = true;
+
+                frm = new Form();
+                backWork1 = new BackgroundWorker();
+                panel1 = new Panel();
+                panel2 = new Panel();
+                lblBaslik = new Label();
+                lblAciklama = new Label();
+                lblBos = new Label();
+                IconResim = new PictureBox();
+
+                frm.Text = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
+                frm.BackColor = Color.FromArgb(20, 31, 41);
+                frm.FormBorderStyle = FormBorderStyle.None;
+                frm.Width = 364;
+                frm.Height = 102;
+                frm.ShowInTaskbar = false;
+                frm.Opacity = 0.0F;
+                frm.TopMost = true;
+
+                panel1.Dock = DockStyle.Left;
+                panel1.Location = new Point(0, 0);
+                panel1.Size = new Size(40, 265);
+                panel2.Dock = DockStyle.Fill;
+                panel2.Location = new Point(126, 0);
+
+                switch (Icon)
+                {
+                    case 1: IconResim.Image = SystemIcons.Error.ToBitmap(); break;
+                    case 2: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                    case 3: IconResim.Image = SystemIcons.Question.ToBitmap(); break;
+                    case 4: IconResim.Image = SystemIcons.Shield.ToBitmap(); break;
+                    case 5: IconResim.Image = SystemIcons.Warning.ToBitmap(); break;
+                    case 6: IconResim.Image = SystemIcons.WinLogo.ToBitmap(); break;
+                    default: IconResim.Image = SystemIcons.Information.ToBitmap(); break;
+                }
+
+                IconResim.Location = new Point(11, 10);
+                IconResim.Size = new Size(0, 45);
+                IconResim.SizeMode = PictureBoxSizeMode.StretchImage;
+                IconResim.Dock = DockStyle.Top;
+                IconResim.Padding = new Padding(5, 10, 5, 5);
+
+                lblBaslik.AutoSize = false;
+                lblBaslik.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
+                lblBaslik.Size = new Size(0, 32);
+                lblBaslik.ForeColor = Color.White;
+                lblBaslik.Text = title;
+                lblBaslik.Dock = DockStyle.Top;
+                lblBaslik.Padding = new Padding(0, 5, 5, 0);
+
+                lblBos.Location = new Point(11, 10);
+                lblBos.Size = new Size(32, 0);
+                lblBos.Dock = DockStyle.Fill;
+
+                lblAciklama.AutoSize = false;
+                lblAciklama.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+                lblAciklama.ForeColor = Color.White;
+                lblAciklama.Text = Description;
+                lblAciklama.Dock = DockStyle.Fill;
+
+                frm.Controls.Add(panel2);
+                frm.Controls.Add(panel1);
+                panel1.Controls.Add(IconResim);
+                panel1.Controls.Add(lblBos);
+                panel2.Controls.Add(lblAciklama);
+                panel2.Controls.Add(lblBaslik);
+                frm.Show();
+
+                switch (position)
+                {
+                    case 1: frm.Location = new Point(0 - frm.Width, 25); break;//SolÜst
+                    case 2: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width + (frm.Width + 15), 25); break;//SağÜst
+                    case 3: frm.Location = new Point(0 - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SolAlt
+                    case 4: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                    default: frm.Location = new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50)); break;//SağAlt
+                }
+
+                Thread myThread = new Thread(new ThreadStart(Islemler));
+                myThread.Start();
+            }
+
+            void Islemler()
+            {
+                switch (position)
+                {
+                    case 1: solUst1(); break;
+                    case 2: sagUst1(); break;
+                    case 3: solAlt1(); break;
+                    case 4: sagAlt1(); break;
+                    default: sagAlt1(); break;
+                }
+
+                switch (position)
+                {
+                    case 1: solUst2(); break;
+                    case 2: sagUst2(); break;
+                    case 3: solAlt2(); break;
+                    case 4: sagAlt2(); break;
+                    default: sagAlt2(); break;
+                }
+            }
+
+            void solUst1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solUst2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagUst1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagUst2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, 25);
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void solAlt1()
+            {
+                for (int i = 0; i <= frm.Width; i += 5)
+                {
+                    frm.Location = new Point((i + 20) - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void solAlt2()
+            {
+                for (int i = frm.Width; i >= -(frm.Width * 2); i -= 5)
+                {
+                    frm.Location = new Point(i - frm.Width, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+
+                bildirimAcik = false;
+                frm.Close();
+            }
+
+            void sagAlt1()
+            {
+                for (int i = Screen.PrimaryScreen.Bounds.Width; i >= (Screen.PrimaryScreen.Bounds.Width - (frm.Width + 15)); i -= 5)
+                {
+                    frm.Location = new Point(i - 5, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 8 == 0)
+                    {
+                        if (frm.Opacity != 1.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity += 0.1;
+                        }
+                    }
+                }
+                Thread.Sleep(time * 1000);
+            }
+
+            void sagAlt2()
+            {
+                for (int i = frm.Location.X; i <= Screen.PrimaryScreen.Bounds.Width; i += 5)
+                {
+                    frm.Location = new Point(i, Screen.PrimaryScreen.Bounds.Height - (frm.Height + 50));
+                    Thread.Sleep(1);
+
+                    if (i % 20 == 0)
+                    {
+                        if (frm.Opacity != 0.0)
+                        {
+                            Thread.Sleep(1);
+                            frm.Opacity -= 0.1;
+                        }
+                    }
+                }
+                bildirimAcik = false;
+                frm.Close();
+            }
+        }
+    }
+}
