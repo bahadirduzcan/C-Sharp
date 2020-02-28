@@ -1,0 +1,341 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Text;
+using System.Security.Cryptography;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Net;
+using System.IO;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using System.Threading;
+using OpenQA.Selenium.Support.UI;
+using System.Xml;
+using System.Data.OleDb;
+using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
+using System.Globalization;
+using System.Text.RegularExpressions;
+
+namespace sitedenvericekme
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            CheckForIllegalCrossThreadCalls = false;
+            InitializeComponent();
+        }
+
+        OleDbConnection baglantiAccess = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=bilgiler.accdb");
+        OleDbCommand komutAccess = new OleDbCommand();
+
+        MySqlConnection baglantiMysql = new MySqlConnection("server=localhost;uid=root;pwd=;database=bahadird_blogger");
+        MySqlCommand komutMysql = new MySqlCommand();
+
+        //ChromeOptions options = new ChromeOptions();
+        //IWebDriver driver;
+
+        void yukle()
+        {
+            XmlDocument i = new XmlDocument();
+            DataSet ds = new DataSet();
+            XmlReader xmlFile;
+            xmlFile = XmlReader.Create("sitemap.xml", new XmlReaderSettings());
+            ds.ReadXml(xmlFile);
+            dataGridView1.DataSource = ds.Tables[0];
+            xmlFile.Close();
+
+            label1.Text = "Satır : " + dataGridView1.RowCount;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            kayitGetir();
+
+            //options.AddArgument("-no-sandbox");
+            //driver = new ChromeDriver("cmd", options, TimeSpan.FromMinutes(2));
+            //yukle();
+
+
+            //for (int i = 0; i < 94; i++)
+            //{
+            //    dataGridView1.Rows.RemoveAt(0);
+            //    dataGridView1.Refresh();
+            //    label1.Text = "Satır : " + dataGridView1.RowCount;
+            //}
+            //for (int i = 0; i < 11030; i++)
+            //{
+            //    dataGridView1.Rows.RemoveAt(0);
+            //    dataGridView1.Refresh();
+            //    label1.Text = "Satır : " + dataGridView1.RowCount;
+            //}
+        }
+
+        private void kayitGetir()
+        {
+            baglantiAccess.Open();
+            string kayit = "SELECT * from veriler_tr";
+            //musteriler tablosundaki tüm kayıtları çekecek olan sql sorgusu.
+            OleDbCommand komut = new OleDbCommand(kayit, baglantiAccess);
+            //Sorgumuzu ve baglantimizi parametre olarak alan bir SqlCommand nesnesi oluşturuyoruz.
+            OleDbDataAdapter da = new OleDbDataAdapter(komut);
+            //SqlDataAdapter sınıfı verilerin databaseden aktarılması işlemini gerçekleştirir.
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            //Bir DataTable oluşturarak DataAdapter ile getirilen verileri tablo içerisine dolduruyoruz.
+            dataGridView1.DataSource = dt;
+            //Formumuzdaki DataGridViewin veri kaynağını oluşturduğumuz tablo olarak gösteriyoruz.
+            baglantiAccess.Close();
+            label1.Text = "Satır : " + dataGridView1.RowCount;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            backgroundWorker1.RunWorkerAsync();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void silToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //int selectedIndex = dataGridView1.CurrentCell.RowIndex;
+            //if (selectedIndex > -1)
+            //{
+            //    dataGridView1.Rows.RemoveAt(selectedIndex);
+            //    dataGridView1.Refresh();
+            //    label1.Text = "Satır : " + dataGridView1.RowCount;
+            //}
+        }
+
+        private void kayit(string baslik, string icerik, string resim, string link)
+        {
+            //try
+            //{
+            //    string sorgu = "Insert Into veriler (baslik,icerik,resim,link) Values (@baslik,@icerik,@resim,@link)";
+            //    komut = new OleDbCommand(sorgu, baglanti);
+            //    komut.Parameters.AddWithValue("@baslik", baslik);
+            //    komut.Parameters.AddWithValue("@icerik", icerik);
+            //    komut.Parameters.AddWithValue("@resim", resim);
+            //    komut.Parameters.AddWithValue("@link", link);
+            //    baglanti.Open();
+            //    komut.ExecuteNonQuery();
+            //    baglanti.Close();
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+        }
+
+        private void kayit2(string baslik, string title_slug, string icerik, string resim, string link)
+        {
+            string metin = "";
+            metin = icerik + "\n\n" + link;
+            string sorgu = "Insert Into posts (title,title_slug,summary,content,user_id,category_id,image_big) Values (@title,@title_slug,@summary,@content,@user_id,@category_id,@image_big)";
+            komutMysql = new MySqlCommand(sorgu, baglantiMysql);
+            komutMysql.Parameters.AddWithValue("@title", baslik);
+            komutMysql.Parameters.AddWithValue("@title_slug", title_slug);
+            komutMysql.Parameters.AddWithValue("@summary", baslik);
+            komutMysql.Parameters.AddWithValue("@content", metin);
+            komutMysql.Parameters.AddWithValue("@user_id", "1");
+            komutMysql.Parameters.AddWithValue("@category_id", "40");
+            komutMysql.Parameters.AddWithValue("@image_big", resim);
+            baglantiMysql.Open();
+            komutMysql.ExecuteNonQuery();
+            baglantiMysql.Close();
+        }
+
+        private void veriCek()
+        {
+            //    for (int i = 0; i < dataGridView1.RowCount; i++)
+            //    {
+            //        label1.Text = "Satır : " + dataGridView1.RowCount + " İşlem Görülen : " + (i + 1);
+
+            //        driver.Navigate().GoToUrl(dataGridView1.Rows[i].Cells[0].Value.ToString());
+
+            //        ReadOnlyCollection<IWebElement> element = driver.FindElements(By.ClassName("shd"));
+            //        ReadOnlyCollection<IWebElement> element2 = driver.FindElements(By.ClassName("imgshadow"));
+            //        ReadOnlyCollection<IWebElement> element6 = driver.FindElements(By.ClassName("a-btn"));
+            //        ReadOnlyCollection<IWebElement> elementel = driver.FindElements(By.CssSelector("div > a > img")).Count >= 1 ? driver.FindElements(By.CssSelector("div > a > img")) : null;
+
+            //        string baslik = "", icerik = "", resim = "", link = "";
+
+            //        foreach (var item in element)
+            //        {
+            //            var esa = item.Text;
+            //            baslik = esa;
+            //        }
+
+            //        foreach (var item in element2)
+            //        {
+            //            string asd = "";
+            //            var esa = item.Text;
+            //            string fesa = esa;
+            //            var tesa = item.FindElements(By.CssSelector("a"));
+            //            foreach (var ittem in tesa)
+            //            {
+            //                asd = ittem.Text;
+            //            }
+            //            icerik = fesa.Substring(0, fesa.Length - (asd.Length)).TrimEnd();
+            //        }
+
+            //        foreach (var item in elementel)
+            //        {
+            //            var esa = item.GetAttribute("src");
+            //            if (esa.Substring(esa.Length - 3, 3) != "gif")
+            //            {
+            //                resim = esa;
+            //            }
+            //        }
+
+            //        foreach (var item in element6)
+            //        {
+            //            var esa = item.GetAttribute("href");
+            //            var tesa = item.FindElements(By.ClassName("a-btn-text"));
+            //            foreach (var ittem in tesa)
+            //            {
+            //                link = ittem.Text + ": " + esa;
+            //            }
+            //        }
+
+            //        kayit(baslik, icerik, resim, link);
+            //    }
+        }
+
+        public string ingilizcelestir(string kelimecik)
+        {
+            kelimecik = kelimecik.Replace('ö', 'o');
+            kelimecik = kelimecik.Replace('ü', 'u');
+            kelimecik = kelimecik.Replace('ğ', 'g');
+            kelimecik = kelimecik.Replace('ş', 's');
+            kelimecik = kelimecik.Replace('ı', 'i');
+            kelimecik = kelimecik.Replace('ç', 'c');
+            kelimecik = kelimecik.Replace('Ö', 'O');
+            kelimecik = kelimecik.Replace('Ü', 'U');
+            kelimecik = kelimecik.Replace('Ğ', 'G');
+            kelimecik = kelimecik.Replace('Ş', 'S');
+            kelimecik = kelimecik.Replace('İ', 'I');
+            kelimecik = kelimecik.Replace('Ç', 'C');
+
+            return kelimecik;
+        }
+
+        private void veriKaydet()
+        {
+            for (int i = 0; i < dataGridView1.RowCount; i++)
+            {
+                label1.Text = "Satır : " + dataGridView1.RowCount + " İşlem Görülen : " + (i + 1);
+
+                string baslik = "", icerik = "", resim = "", link = "", title_slug = "";
+
+                baslik = dataGridView1.Rows[i].Cells[1].Value.ToString();
+                title_slug = baslik.Trim()
+
+
+                icerik = dataGridView1.Rows[i].Cells[2].Value.ToString();
+                resim = dataGridView1.Rows[i].Cells[3].Value.ToString();
+                link = dataGridView1.Rows[i].Cells[4].Value.ToString();
+
+                kayit2(baslik, ingilizcelestir(title_slug), icerik, resim, link);
+            }
+        }
+
+        private void link_haline_cevir(string metin)
+        {
+            metin.Replace(" ", "-")
+                    .Replace(".", "-")
+                    .Replace("\"", "")
+                    .Replace("_", "-")
+                    .Replace("!", "")
+                    .Replace("=", "")
+                    .Replace("(", "")
+                    .Replace(")", "")
+                    .Replace("[", "")
+                    .Replace("]", "")
+                    .Replace("\\", "")
+                    .Replace("/", "")
+                    .Replace("'", "")
+                    .Replace("* ", "")
+                    .Replace(" *", "")
+                    .ToLower();
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //veriCek();
+
+            veriKaydet();
+
+            //CeviriYap();
+        }
+
+        private void CeviriYap()
+        {
+            //for (int i = 0; i < dataGridView1.RowCount; i++)
+            //{
+            //    label1.Text = "Satır : " + dataGridView1.RowCount + " İşlem Görülen : " + (i + 1);
+
+            //    driver.Navigate().GoToUrl("https://translate.google.com/#view=home&op=translate&sl=ru&tl=tr&text=" + dataGridView1.Rows[i].Cells[1].Value.ToString());
+            //    Thread.Sleep(2000);
+            //    ReadOnlyCollection<IWebElement> element = driver.FindElements(By.ClassName("tlid-translation"));
+
+            //    string baslik_TR = "";
+
+            //    foreach (var item in element)
+            //    {
+            //        var esa = item.Text;
+            //        baslik_TR = esa;
+            //    }
+
+            //    driver.Navigate().GoToUrl("https://translate.google.com/#view=home&op=translate&sl=ru&tl=tr&text=" + dataGridView1.Rows[i].Cells[2].Value.ToString());
+            //    Thread.Sleep(2000);
+            //    ReadOnlyCollection<IWebElement> elementel = driver.FindElements(By.ClassName("tlid-translation"));
+
+            //    string icerik_TR = "";
+
+            //    foreach (var item in elementel)
+            //    {
+            //        var esa = item.Text;
+            //        icerik_TR = esa;
+            //    }
+
+            //    string resim_TR = "", link_TR = "";
+
+            //    resim_TR = dataGridView1.Rows[i].Cells[3].Value.ToString();
+            //    link_TR = dataGridView1.Rows[i].Cells[4].Value.ToString();
+
+            //    kayit_TR(baslik_TR, icerik_TR, resim_TR, link_TR);
+            //}
+        }
+
+        private void kayit_TR(string baslik, string icerik, string resim, string link)
+        {
+            try
+            {
+                string sorgu = "Insert Into veriler_tr (baslik,icerik,resim,link) Values (@baslik,@icerik,@resim,@link)";
+                komutAccess = new OleDbCommand(sorgu, baglantiAccess);
+                komutAccess.Parameters.AddWithValue("@baslik", baslik);
+                komutAccess.Parameters.AddWithValue("@icerik", icerik);
+                komutAccess.Parameters.AddWithValue("@resim", resim);
+                komutAccess.Parameters.AddWithValue("@link", link);
+                baglantiAccess.Open();
+                komutAccess.ExecuteNonQuery();
+                baglantiAccess.Close();
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+    }
+}
