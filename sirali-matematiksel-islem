@@ -1,0 +1,2 @@
+double result = Convert.ToDouble(new DataTable().Compute(textBox1.Text, null));
+textBox2.Text = result.ToString();
