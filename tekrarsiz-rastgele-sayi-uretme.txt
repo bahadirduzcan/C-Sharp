@@ -1,0 +1,8 @@
+			Random random = new Random();
+            HashSet<int> sayilar = new HashSet<int>();
+            while (sayilar.Count != 10)
+                sayilar.Add(random.Next(1, 50));
+
+            foreach (var i in sayilar)
+                Console.WriteLine(i);
+            Console.ReadKey();
