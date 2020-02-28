@@ -1,0 +1,22 @@
+ABS : Girilen Değerin Mutlak Değerini bize verir;
+MessageBox.Show(Math.Abs(-5).ToString());
+BigMul : Verilen İki Değerin Çarpımını Döndürür.
+MessageBox.Show(Math.BigMul(15,2).ToString());
+Sqrt Verilen Sayının Karekökünü bulur.
+MessageBox.Show(Math.Sqrt(15).ToString());
+Round : Verilen Ondalık Değerinde Virgülden Sonra Kaç Sayı Alınacağını Gösterir;
+MessageBox.Show(Math.Round(15.56,1).ToString());
+Yukarıdaki örnekte 15.56 değerinde bir ondalık sayı girilmiştir, Round İşlemi bize 15.5 Değerini Döndürür.
+Celling : Ondalık Sayıyı Yukarıya Doğru Yuvarlayıp Tam Kısmını Geriye Döndürür;
+MessageBox.Show(Math.Celling(15.6444).ToString());
+Floor : Celling fonksiyonuna göre bu fonksiyon sadece verilen ondalık değerin tam kısmını geriye döndürür;
+MessageBox.Show(Math.Floor(15.6444).ToString());
+IEEERemainder: Verilen İki Sayının Bölümünden Sadece Kalan Değeri Geriye Döndürür;
+MessageBox.Show(Math.IEEERemainder(11,5).ToString());
+Max: Verilen İki Değerden Büyük Olanı Geriye Döndürür;
+MessageBox.Show(Math.Max(11,5).ToString());
+Min: Verilen İki Değerden Küçük Olanı Geriye Döndürür;
+MessageBox.Show(Math.Min(11,5).ToString());
+DivRem: Verilen İki Değeri Böler ve Geriye Bölüm Değerini Döndürür;
+int s
+MessageBox.Show(Math.DivRem(11,5,out s).ToString());
