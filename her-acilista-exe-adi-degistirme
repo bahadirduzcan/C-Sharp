@@ -1,0 +1,16 @@
+Formun load kısmına
+
+    string x;​
+
+    x = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10); // 10 tane karışık sayı ve harf oluşturur
+
+    System.IO.File.Move(Application.ExecutablePath , x  + ".exe" ); // oluşturdugumuz harfler ile exenin ismini değitirir​
+
+
+Eğer text'in değişmesini istiyorsanız ;​
+
+    string x;
+
+    x = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10); // 10 tane karışık sayı ve harf oluşturur
+         
+    this.Text =  x;
