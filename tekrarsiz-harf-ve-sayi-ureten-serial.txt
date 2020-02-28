@@ -1,0 +1,20 @@
+			string harfler = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ0123456789";
+            
+            string uret = "";
+
+            Random random = new Random();
+            HashSet<int> sayilar = new HashSet<int>();
+
+            while (sayilar.Count != 20)
+                sayilar.Add(random.Next(0, 37));
+
+            foreach (var i in sayilar)
+            {
+                uret += harfler[i];
+            }
+
+            listBox1.Items.Add(uret);
+
+            string sonHal = uret.Substring(0, 4) + "-" + uret.Substring(4, 4) + "-" + uret.Substring(8, 4) + "-" + uret.Substring(12, 4) + "-" + uret.Substring(16, 4);
+
+            listBox1.Items.Add(sonHal);
